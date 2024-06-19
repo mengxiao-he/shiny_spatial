@@ -53,7 +53,7 @@ plotData <- eventReactive(input$loadPlot, {
         umapPlot = Seurat::DimPlot(mb_hd, 
                                    reduction = "full.umap.sketch", 
                                    group.by = group_by_param, 
-                                   label = FALSE) + NoAxes(),
+                                   label = FALSE) + NoAxes() + theme(plot.title = element_blank()),
         spatialPlot = Seurat::SpatialDimPlot(mb_hd, 
                                              group.by = group_by_param, 
                                              label = FALSE)
@@ -75,7 +75,7 @@ plotData <- eventReactive(input$loadPlot, {
                                    reduction = "full.umap.sketch", 
                                    label = FALSE, 
                                    cells.highlight = cells_to_plot, 
-                                   cols.highlight = c("#FFFF00", "grey50")) + NoLegend() + NoAxes(),
+                                   cols.highlight = c("#FFFF00", "grey50")) + NoLegend() + NoAxes() + theme(plot.title = element_blank()),
         spatialPlot = Seurat::SpatialDimPlot(mb_hd, 
                                              label = FALSE, 
                                              cells.highlight = cells_to_plot, 
@@ -87,10 +87,10 @@ plotData <- eventReactive(input$loadPlot, {
       umapPlot = Seurat::FeaturePlot(mb_hd, 
                                      features = input$gene, 
                                      reduction = "full.umap.sketch", 
-                                     cols = c("lightgray", "navyblue")) + NoAxes(),
+                                     cols = c("lightgray", "navyblue")) + NoAxes() + theme(plot.title = element_blank()),
       spatialPlot = Seurat::SpatialFeaturePlot(mb_hd, 
-                                               features = input$gene) 
-      & ggplot2::scale_fill_gradient2(high = "navyblue")
+                                               features = input$gene, ) 
+      & ggplot2::scale_fill_gradient2(high = "navyblue") & theme(legend.position = "right")
     )
   }
   

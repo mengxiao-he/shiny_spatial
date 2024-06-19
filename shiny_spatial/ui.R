@@ -16,7 +16,6 @@ fluidPage(
     # Application title
     titlePanel("Exploration of Visium HD data"),
 
-    # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
           selectInput("type", "Type", selected = "Label", choices = c("Transcript", "Label")),
@@ -26,12 +25,13 @@ fluidPage(
             uiOutput("ui2")
           ),
           actionButton("loadPlot", "Plot"),
+          hr(),
+          plotOutput("umapPlot")
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-            plotOutput("umapPlot", width = "500px", height = "400px"),
-            plotOutput("spatialPlot", width = "800px", height = "600px")
+            plotOutput("spatialPlot", width = "1000px", height = "900px")
         )
     )
 )
