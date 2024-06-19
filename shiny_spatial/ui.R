@@ -25,13 +25,13 @@ fluidPage(
             condition = "input.type == 'Label'",
             uiOutput("ui2")
           ),
-          actionButton("loadData", "Load Data"),
+          actionButton("loadPlot", "Plot"),
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-            plotOutput("umapPlot"),
-            plotOutput("spatialPlot")
+            plotOutput("umapPlot", width = "600px", height = "400px"),
+            plotOutput("spatialPlot", width = "600px", height = "400px")
         )
     )
 )
