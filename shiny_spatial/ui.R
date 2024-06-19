@@ -63,8 +63,8 @@ fluidPage(
         # Show a plot of the generated distribution
         mainPanel(
           
-            plotOutput("umap"),
-            plotOutput("spatial"),
+          imageOutput("umap",width="600px",height="500px"),
+          imageOutput("spatial",width="600px",height="500px"),
         )
     )
 )
