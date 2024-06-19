@@ -30,8 +30,8 @@ fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-            plotOutput("umapPlot", width = "600px", height = "400px"),
-            plotOutput("spatialPlot", width = "600px", height = "400px")
+            plotOutput("umapPlot", width = "500px", height = "400px"),
+            plotOutput("spatialPlot", width = "800px", height = "600px")
         )
     )
 )
