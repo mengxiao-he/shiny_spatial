@@ -8,28 +8,34 @@
 #
 
 library(shiny)
-# Creeate a parameter tabs
-# gene_name <- rownames(HD)
-# Seurat_cluster <- HD@meta.data$seurat_cluster.projected
-# Banksy_cluster <- HD@meta.data$banksy_cluster
 
+parameter_label <- tabsetPanel(
+  id = "params_label",
+  type = "hidden",
 
-# parameter_tabs <- tabsetPanel(
-#   id = "params",
-#   type = "hidden",
-#   tabPanel("Transcript",
-#            selectInput("gene_name", "Gene name", choices = rownames(HD)
-#   ),
-#   tabPanel("SeuratCluster", 
-#            selectInput("Seurat_cluster", "Seurat")
-#   ),
-#   tabPanel("BanksyCluster",
-#            numericInput("rate", "rate", value = 1, min = 0),
-#   ),
-#   tabPanel("Celltype",
-#            numericInput("rate", "rate", value = 1, min = 0),
-#   )
-# )
+  tabPanel("Label",
+           selectInput("label", "Label", choices = c("SeuratCluster", "BanksyCluster", "CellType")),
+           ),
+  tabPanel("Transcript",
+           selectInput("gene", "Gene", choices = rownames(mb_hd))
+           )
+  )
+
+parameter_cluster <- tabsetPanel(
+  id = "params_cluster",
+  type = "hidden",
+  
+  tabPanel("SeuratCluster",
+           selectInput("SeuratCluster", "SeuratCluster", choices = levels(mb_hd@meta.data$seurat_cluster.projected)),
+  ),
+  tabPanel("BanksyCluster",
+           selectInput("BanksyCluster", "BanksyCluster", choices = levels(mb_hd@meta.data$banksy_cluster))
+  ),
+  tabPanel("CellType",
+           selectInput("CellType", "CellType", choices = levels(mb_hd@meta.data$full_first_type))
+  ),
+)
+
 
 
 
@@ -42,14 +48,23 @@ fluidPage(
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-          selectInput("HD_disply", "Disply", selected = "Label", choices = c("Transcript", "Label")),
-          uiOutput("ui"),
-          actionButton("loadData", "Load Data"),
+          selectInput("HD_disply", "Disply", selected = "Label", 
+                      choices = c("Transcript", "Label")),
+          
+          # uiOutput("ui"),
+          parameter_label,
+          conditionalPanel(
+            condition = "input.HD_disply == 'Label'",
+            parameter_cluster
+          ),
+          #actionButton("loadData", "Load Data"),
         ),
-
+        
         # Show a plot of the generated distribution
         mainPanel(
-            plotOutput("distPlot")
+          
+            plotOutput("umap"),
+            plotOutput("spatial"),
         )
     )
 )

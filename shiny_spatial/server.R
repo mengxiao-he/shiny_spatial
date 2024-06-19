@@ -10,17 +10,24 @@
 library(shiny)
 
 # Define server logic
-function(input, output, session) {
-  
-output$ui <- renderUI({
-  if(input$HD_disply=="Transcript") {
-    selectInput("gene", "Gene", choices = rownames(mb_hd))
-  } else {
-    selectInput("label", "Label", choices = c("SeuratCluster", "BanksyCluster", "Celltype"))
-  }
-  
+ function(input, output, session) {
+   observeEvent(input$HD_disply, {
+     updateTabsetPanel(inputId = "params_label", selected = input$HD_disply)
+   })
+   
+   observeEvent(input$label, {
+     updateTabsetPanel(inputId = "params_cluster", selected = input$label)
+   })
+   
+     
+     output$plot <- renderPlot({
+       ggplot(iris, aes(Sepal.Length, Petal.Length, col = Species)) +
+         geom_point() +
+         facet_wrap(~Species) +
+         labs(title = "Iris dataset", subtitle = "Scatterplots of Sepal and Petal lengths", caption = "The iris dataset by Edgar Anderson") +
+         theme_grey(base_size = 16)
+     })
+     
 
-  
-})
-  
+#   
 }
