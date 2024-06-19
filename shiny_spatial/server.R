@@ -8,6 +8,8 @@
 #
 
 library(shiny)
+library(Seurat)
+library(ggplot2)
 
 # Define server logic
 function(input, output, session) {
