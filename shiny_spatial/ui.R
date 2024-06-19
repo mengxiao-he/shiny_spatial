@@ -8,29 +8,6 @@
 #
 
 library(shiny)
-# Creeate a parameter tabs
-# gene_name <- rownames(HD)
-# Seurat_cluster <- HD@meta.data$seurat_cluster.projected
-# Banksy_cluster <- HD@meta.data$banksy_cluster
-
-
-# parameter_tabs <- tabsetPanel(
-#   id = "params",
-#   type = "hidden",
-#   tabPanel("Transcript",
-#            selectInput("gene_name", "Gene name", choices = rownames(HD)
-#   ),
-#   tabPanel("SeuratCluster", 
-#            selectInput("Seurat_cluster", "Seurat")
-#   ),
-#   tabPanel("BanksyCluster",
-#            numericInput("rate", "rate", value = 1, min = 0),
-#   ),
-#   tabPanel("Celltype",
-#            numericInput("rate", "rate", value = 1, min = 0),
-#   )
-# )
-
 
 
 # Define UI for application that draws a histogram
@@ -42,14 +19,19 @@ fluidPage(
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-          selectInput("HD_disply", "Disply", selected = "Label", choices = c("Transcript", "Label")),
+          selectInput("type", "Type", selected = "Label", choices = c("Transcript", "Label")),
           uiOutput("ui"),
+          conditionalPanel(
+            condition = "input.type == 'Label'",
+            uiOutput("ui2")
+          ),
           actionButton("loadData", "Load Data"),
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-            plotOutput("distPlot")
+            plotOutput("umapPlot"),
+            plotOutput("spatialPlot")
         )
     )
 )
