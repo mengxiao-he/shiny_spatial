@@ -156,7 +156,7 @@ sorted_names <- sort(names(cells))
 sorted_names_without_unknown <- sorted_names[sorted_names != "Unknown"]
 sorted_cells <- cells[sorted_names_without_unknown]
 # Append the "Unknown" entry to the end if it exists
-if ("Unknown" %in% cell_names) {
+if ("Unknown" %in% sorted_names) {
   sorted_cells[["Unknown"]] <- cells[["Unknown"]]
 }
 cells <- sorted_cells
@@ -164,5 +164,8 @@ cells <- sorted_cells
 # SpatialDimPlot(object, cells.highlight = cells[1:16], cols.highlight = c("#FFFF00", "grey50"), 
 #                facet.highlight = T, combine = T, ncol = 4)
 
+object$full_first_type <- factor(object$full_first_type, levels = names(cells))
+object$seurat_cluster.projected <- factor(object$seurat_cluster.projected, levels = sort(as.numeric(unique(object$seurat_cluster.projected))))
 
 saveRDS(object, file = paste0(localdir, "seurat_hd_mb_banksy_rctd.rds"))
+
