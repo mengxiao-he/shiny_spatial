@@ -15,26 +15,30 @@ library(ggplot2)
 function(input, output, session) {
   
 output$ui <- renderUI({
+  dataSet <- get(input$dataset)
   if(input$type=="Transcript") {
-    selectInput("gene", "Gene", choices = rownames(mb_hd))
+    selectInput("gene", "Gene", choices = rownames(dataSet))
   } else {
     selectInput("label", "Label", choices = c("SeuratCluster", "BanksyCluster", "Celltype"), selected = "SeuratCluster")
   }
 })
 
 output$ui2 <- renderUI({
+  dataSet <- get(input$dataset)
   if(input$label=="SeuratCluster") {
-    selectInput("seurat_cluster", "Cluster", choices = c("All", levels(mb_hd$seurat_cluster.projected)), selected = "All")
+    selectInput("seurat_cluster", "Cluster", choices = c("All", levels(dataSet$seurat_cluster.projected)), selected = "All")
   } else if(input$label=="BanksyCluster") {
-    selectInput("banksy_cluster", "Cluster", choices = c("All", levels(mb_hd$banksy_cluster)), selected = "All")
+    selectInput("banksy_cluster", "Cluster", choices = c("All", levels(dataSet$banksy_cluster)), selected = "All")
   } else if(input$label=="Celltype") {
-    selectInput("celltype", "Celltype", choices = levels(mb_hd$full_first_type))
+    selectInput("celltype", "Celltype", choices = levels(dataSet$full_first_type))
   }
 })
 
 
 
 plotData <- eventReactive(input$loadPlot, {
+  
+  dataSet <- get(input$dataset)
   
   if (input$type=="Label") {
     
@@ -46,17 +50,17 @@ plotData <- eventReactive(input$loadPlot, {
       group_by_param <- "full_first_type"
     }
     
-    Idents(mb_hd) <- group_by_param
+    Idents(dataSet) <- group_by_param
     
     if((input$label == "SeuratCluster" && input$seurat_cluster == "All") || 
        (input$label == "BanksyCluster" && input$banksy_cluster == "All")) {
       
       list(
-        umapPlot = Seurat::DimPlot(mb_hd, 
+        umapPlot = Seurat::DimPlot(dataSet, 
                                    reduction = "full.umap.sketch", 
                                    group.by = group_by_param, 
                                    label = FALSE) + NoAxes() + theme(plot.title = element_blank()),
-        spatialPlot = Seurat::SpatialDimPlot(mb_hd, 
+        spatialPlot = Seurat::SpatialDimPlot(dataSet, 
                                              group.by = group_by_param, 
                                              label = FALSE)
       )
@@ -70,15 +74,15 @@ plotData <- eventReactive(input$loadPlot, {
         selected_cluster <- input$celltype
       }
       
-      cells_to_plot <- CellsByIdentities(mb_hd, idents = selected_cluster)
+      cells_to_plot <- CellsByIdentities(dataSet, idents = selected_cluster)
       
       list(
-        umapPlot = Seurat::DimPlot(mb_hd, 
+        umapPlot = Seurat::DimPlot(dataSet, 
                                    reduction = "full.umap.sketch", 
                                    label = FALSE, 
                                    cells.highlight = cells_to_plot, 
                                    cols.highlight = c("#FFFF00", "grey50")) + NoLegend() + NoAxes() + theme(plot.title = element_blank()),
-        spatialPlot = Seurat::SpatialDimPlot(mb_hd, 
+        spatialPlot = Seurat::SpatialDimPlot(dataSet, 
                                              label = FALSE, 
                                              cells.highlight = cells_to_plot, 
                                              cols.highlight = c("#FFFF00", "grey50")) + NoLegend()
@@ -86,11 +90,11 @@ plotData <- eventReactive(input$loadPlot, {
     }
   } else if(input$type=="Transcript") {
     list(
-      umapPlot = Seurat::FeaturePlot(mb_hd, 
+      umapPlot = Seurat::FeaturePlot(dataSet, 
                                      features = input$gene, 
                                      reduction = "full.umap.sketch", 
                                      cols = c("lightgray", "navyblue")) + NoAxes() + theme(plot.title = element_blank()),
-      spatialPlot = Seurat::SpatialFeaturePlot(mb_hd, 
+      spatialPlot = Seurat::SpatialFeaturePlot(dataSet, 
                                                features = input$gene, ) 
       & ggplot2::scale_fill_gradient2(high = "navyblue") & theme(legend.position = "right")
     )

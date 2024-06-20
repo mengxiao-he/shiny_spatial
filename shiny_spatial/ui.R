@@ -18,6 +18,7 @@ fluidPage(
 
     sidebarLayout(
         sidebarPanel(
+          selectInput("dataset", "Dataset", choices = avail_datasets),
           selectInput("type", "Type", selected = "Label", choices = c("Transcript", "Label")),
           uiOutput("ui"),
           conditionalPanel(
