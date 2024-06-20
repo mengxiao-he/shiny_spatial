@@ -7,6 +7,7 @@ library(patchwork)
 library(dplyr)
 library(SeuratWrappers)
 library(Banksy)
+library(spacexr)
 
 # load data
 localdir <- "/Users/mengxiaohe/10x_Visium_HD_data/mouse_brain/"
